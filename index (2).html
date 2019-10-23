@@ -2,20 +2,34 @@
 <html>
 <head><title>Clicker Game</title>
 <style>
+#marker {
+	position: absolute;
+	width:5px;
+	height:100px;
+	background-color: black;
+	z-index: 1;
+	visibility: hidden;
+}
+#maincont {
+	position: relative;
+	top:100px;
+}
 .container {
 	width:200px;
 	height:100px;
-	border-radius: 20px;
-	border:20px solid;
-	border-color: black;
+    background-color: #4D515F;
 	margin-left: auto;
 	margin-right: auto;
+	position: relative;
+
 
 }
 #bar {
+	position: absolute;
 	width:200px;
 	height:100px;
 	background-color: green;
+
 
 }
 #restartButt {
@@ -57,6 +71,9 @@ h3 {
 #calibrate:hover {
 	cursor:pointer;
 }
+body {
+	background-color: #16171B;
+}
 </style>
 <script>
 var up = 0;
@@ -75,6 +92,7 @@ var toop = 0
 var animloop;
 var tak = 1
 var gamee = false
+var lowest = 200;
 
 function moveanim() {
 	console.log(toop)
@@ -117,6 +135,7 @@ function calibratee(){
 }
 function restart(){
 	if (calOn == false && gamee == false) {
+
 		gamee = true
 		attempts = attempts + 1;
 	am = 1;
@@ -129,6 +148,7 @@ function restart(){
 	console.log('helloo')
 	tak = 1;
 	document.getElementById('restartButt').style.cursor = 'default';
+	document.getElementById('marker').style.visibility = 'visible'
     animloop = setInterval(moveanim, 8);
 	
 	
@@ -172,7 +192,11 @@ document.onkeyup = function enable() {
 
 var am = 1;
 setInterval(function(){  if (end == false){
-	document.getElementById('bar').style.width = 200 - am + 'px'; 
+	document.getElementById('bar').style.width = 200 - am + 'px';
+	if (200 - am < lowest){
+		lowest = 200-am
+		document.getElementById('marker').style.left = (200 - am) + 'px' 
+	} 
 	am = am + lvl;
 	if(clicks > best) {
 	best = clicks;
@@ -194,6 +218,8 @@ document.getElementById('avg').innerHTML = 'Avg Score: ' + (totscore / attempts)
 }
 gamee = false
 tak = -1
+document.getElementById('marker').style.visibility = 'hidden';
+lowest = 300
 document.getElementById('bar').style.width = '200px';
 document.getElementById('bar').style.backgroundColor = 'red';
 animloop = setInterval(moveanim, 8);
@@ -204,13 +230,14 @@ avgstop = true;
 
 </script></head>
 <body>
-	
-	<div class='container'><div id='bar'></div></div>
-	<div id='restartButt' onclick='restart()'><h2 id='text'>Start</h2></div>
-	<h3 id='clicks'><h3>
-		<div id='calibrate' onclick='calibratee()'><p id='calibrate text'>Change Key</p></div>
-		<h3 id='Best'></h3>
-		<h3 id='avg'></h3>
+	<div id='maincont'>
+	  <div class='container'><div id='marker'></div><div id='bar'></div></div>
+	  <div id='restartButt' onclick='restart()'><h2 id='text'>Start</h2></div>
+	  <h3 id='clicks'><h3>
+	  <div id='calibrate' onclick='calibratee()'><p id='calibrate text'>Change Key</p></div>
+	  <h3 id='Best'></h3>
+	  <h3 id='avg'></h3>
+	</div>
 
 </body>
 </html>
