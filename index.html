@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head><title>Clicker Game</title>
+<style>
+#marker {
+	position: absolute;
+	width:5px;
+	height:100px;
+	background-color: black;
+	z-index: 1;
+	visibility: hidden;
+}
+#maincont {
+	position: relative;
+	top:100px;
+}
+.container {
+	width:200px;
+	height:100px;
+    background-color: #4D515F;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+
+
+}
+#bar {
+	position: absolute;
+	width:200px;
+	height:100px;
+	background-color: green;
+
+
+}
+#restartButt {
+	position: relative;
+	height:50px;
+	width:120px;
+	background-color: blue;
+	text-align: center;
+	border-radius: 5px;
+	margin-left: auto;
+	margin-right: auto;
+	font-family: arial;
+	line-height: 50px;
+	opacity: 1.0;
+	cursor:pointer;
+
+
+}
+#restartButt:active{
+top:2px;
+}
+#restartButt:hover{
+	
+}
+h2 {
+	color: white;
+	z-index: 10;
+}
+h3 {
+	font-family: arial;
+}
+#calibrate {
+	position: relative;
+	width:100px;
+	height:50px;
+	background-color: yellow;
+	font-family: arial;
+}
+#calibrate:hover {
+	cursor:pointer;
+}
+body {
+	background-color: #16171B;
+}
+</style>
+<script>
+var up = 0;
+var on = 0;
+var end = true;
+var lvl = 1;
+var stage = 0;
+var clicks = 0;
+var calibrate = 32;
+var calOn = false;
+var best = 0;
+var attempts = 0;
+var totscore = 0;
+var avgstop = false;
+var toop = 0
+var animloop;
+var tak = 1
+var gamee = false
+var lowest = 200;
+
+function moveanim() {
+	console.log(toop)
+	if (tak == -1){
+     	if (toop > 0){
+	        toop = toop - 1
+             document.getElementById('restartButt').style.top = toop + 'px';
+             document.getElementById('restartButt').style.opacity = (100 - (toop*5))/100;
+             document.getElementById('calibrate').style.top = toop + 'px';
+             document.getElementById('calibrate').style.opacity = (100 - (toop*5))/100;
+	}else{
+		document.getElementById('restartButt').style.cursor = 'pointer';
+		clearInterval(animloop)
+
+	}
+
+	}else{
+		if (toop < 20){
+	 toop = toop + 1
+     document.getElementById('restartButt').style.top = toop + 'px';
+     document.getElementById('restartButt').style.opacity = (100 - (toop*5))/100;
+                  document.getElementById('calibrate').style.top = toop + 'px';
+             document.getElementById('calibrate').style.opacity = (100 - (toop*5))/100;
+
+	}else{
+		clearInterval(animloop)
+
+	}
+
+	}
+
+
+
+ 
+
+}
+function calibratee(){
+	calOn = true;
+	document.getElementById('calibrate text').innerHTML = 'listening..'
+}
+function restart(){
+	if (calOn == false && gamee == false) {
+
+		gamee = true
+		attempts = attempts + 1;
+	am = 1;
+	clicks = 0;
+	stage = 0;
+	document.getElementById('clicks').innerHTML = 'Clicks:' + ' ' + clicks;
+	document.getElementById('bar').style.backgroundColor = 'green';
+	end = false;
+	console.log('restart clicked');
+	console.log('helloo')
+	tak = 1;
+	document.getElementById('restartButt').style.cursor = 'default';
+	document.getElementById('marker').style.visibility = 'visible'
+    animloop = setInterval(moveanim, 8);
+	
+	
+
+
+
+
+	avgstop = false;
+}
+
+}
+ 
+ window.onkeydown = function pressed(event) {
+ 	var key = event.which;
+
+ 	if (key == calibrate){
+ 		if (on == 0 && end == false && calOn == false){
+ 		document.getElementById('bar').style.width = '200px';
+ 		am = 1;
+ 		on = 1;
+ 		clicks = clicks + 1;
+ 		document.getElementById('clicks').innerHTML = 'Clicks:' + ' ' + clicks;
+ 		
+ 		stage = stage + 1;
+ 		if (stage % 10 == 0) {
+ 			lvl = lvl + 1;
+ 		}
+ 		}
+
+ 	}
+ 	 	if (calOn == true) {
+ 		calibrate = key;
+ 		calOn = false;
+ 		document.getElementById('calibrate text').innerHTML = 'Change Key';
+ 	}
+ } 
+document.onkeyup = function enable() {
+	on = 0;
+} 
+
+
+var am = 1;
+setInterval(function(){  if (end == false){
+	document.getElementById('bar').style.width = 200 - am + 'px';
+	if (200 - am < lowest){
+		lowest = 200-am
+		document.getElementById('marker').style.left = (200 - am) + 'px' 
+	} 
+	am = am + lvl;
+	if(clicks > best) {
+	best = clicks;
+	document.getElementById('Best').innerHTML = 'Best Score: ' + best;
+	document.getElementById('bar').style.backgroundColor = '#ffbf00';
+}
+
+} 
+	if (am >=200 && avgstop == false){
+end = true; 
+lvl = 1;
+if (clicks > 0) {
+
+totscore = totscore + clicks;
+document.getElementById('avg').innerHTML = 'Avg Score: ' + (totscore / attempts).toFixed(1);
+} else {
+	attempts = attempts - 1;
+	document.getElementById('clicks').innerHTML = 'Clicks: 0, Attempt Cancelled';
+}
+gamee = false
+tak = -1
+document.getElementById('marker').style.visibility = 'hidden';
+lowest = 300
+document.getElementById('bar').style.width = '200px';
+document.getElementById('bar').style.backgroundColor = 'red';
+animloop = setInterval(moveanim, 8);
+document.getElementById('text').innerHTML = 'Restart';
+
+avgstop = true;
+}    }, 5);
+
+</script></head>
+<body>
+	<div id='maincont'>
+	  <div class='container'><div id='marker'></div><div id='bar'></div></div>
+	  <div id='restartButt' onclick='restart()'><h2 id='text'>Start</h2></div>
+	  <h3 id='clicks'><h3>
+	  <div id='calibrate' onclick='calibratee()'><p id='calibrate text'>Change Key</p></div>
+	  <h3 id='Best'></h3>
+	  <h3 id='avg'></h3>
+	</div>
+
+</body>
+</html>
